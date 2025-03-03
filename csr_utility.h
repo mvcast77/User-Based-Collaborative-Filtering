@@ -9,6 +9,7 @@ struct CSR {
 	std::vector<int> indices;
 	std::vector<int> ptr;
 	unsigned columns;
+	std::vector<double> cosine(const std::vector<T>& x) const;
 	std::vector<T> vector_mult(const std::vector<T>& x) const;
 	void operator*=(const T coefficient);
 };

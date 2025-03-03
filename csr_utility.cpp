@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-#include <typeinfo>
+#include <cmath>
 #include "csr_utility.h"
 
 //template struct CSR<int>;
@@ -18,26 +18,27 @@ template std::ostream& operator<<(std::ostream&, const CSR<double>*);
 template std::ostream& operator<<(std::ostream&, const CSR<int>*);
 
 template <typename T>
-std::vector<T> CSR<T>::cosine(const std::vector<T>& x) const{
+std::vector<double> CSR<T>::cosine(const std::vector<T>& x) const{
 	int spot = 0, count = 0;
-	T sum = 0;
-	std::vector<T> result;
-	std::vector<bool> flags;
+	double sum = 0;
+	double mag_i = 0, mag_j = 0;
+	std::vector<double> result;
 
 	for (int i = 0; i < ptr.size() - 1; ++i){
-		sum = count = 0;
+		sum = count = mag_i = mag_j = 0;
 		for (int j = 0; count < ptr[i+1] - ptr[i]; ++j){
-			flags.push_back(false);
 			if (j == indices[spot]){
 				if (x[j] == 0){
 					sum += x[j] * values[spot];
-					flags[j] = true;
+					mag_i += values[spot] * values[spot];
+					mag_j += x[j] * x[j];
 				}
 				++spot; ++count;
 			}
-
-			flags.clear();
 		}
+		mag_i = sqrt(mag_i);
+		mag_j = sqrt(mag_j);
+		sum = sum / (mag_i * mag_j);
 		result.push_back(sum);
 	}
 	return result;

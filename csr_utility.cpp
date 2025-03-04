@@ -28,7 +28,7 @@ std::vector<double> CSR<T>::cosine(const std::vector<T>& x) const{
 		sum = count = mag_i = mag_j = 0;
 		for (int j = 0; count < ptr[i+1] - ptr[i]; ++j){
 			if (j == indices[spot]){
-				if (x[j] == 0){
+				if (x[j] != 0){
 					sum += x[j] * values[spot];
 					mag_i += values[spot] * values[spot];
 					mag_j += x[j] * x[j];
@@ -129,7 +129,7 @@ std::istream& operator>>(std::istream& file, CSR<T>* csr){
 		file >> second_num >> third_num;
 		if (second_num > max_col) max_col = second_num;
 
-		csr->indices.push_back(second_num);
+		csr->indices.push_back(second_num - 1);
 		csr->values.push_back(third_num);
 
 		csr->ptr[current]++;

@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <vector>
 #include <cmath>
-#include <ostream>
+#include <iostream>
 #include "vector_utility.h"
 
 template std::vector<int> operator+(const std::vector<int>&, const std::vector<int>&);
@@ -9,9 +9,32 @@ template std::vector<double> operator+(const std::vector<double>&, const std::ve
 template std::vector<int> operator-(const std::vector<int>&, const std::vector<int>&);
 template std::vector<double> operator-(const std::vector<double>&, const std::vector<double>&);
 template std::vector<double> teleport(const double, const int);
+template std::istream& operator>>(std::istream& file, std::vector<std::pair<unsigned,int>>& vec);
+template std::istream& operator>>(std::istream& file, std::vector<std::pair<unsigned,double>>& vec);
 template std::ostream& operator<<(std::ostream&, const std::vector<double>&);
 template std::ostream& operator<<(std::ostream&, const std::vector<int>&);
 template double magnitude(const std::vector<double>);
+
+template <typename T>
+std::istream& operator>>(std::istream& file, std::vector<std::pair<unsigned,T>>& vec){
+
+	unsigned first_num;
+	unsigned second_num;
+	unsigned third_num;
+	unsigned current;
+	file >> current >> second_num >> third_num;
+	vec.push_back({second_num, third_num});
+
+	while (file >> first_num && first_num == current){
+		file >> second_num >> third_num;
+		vec.push_back({second_num, third_num});
+	}
+	file.unget();
+	file.unget();
+	file.unget();
+
+	return file;
+}
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec){

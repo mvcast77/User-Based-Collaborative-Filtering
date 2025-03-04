@@ -5,10 +5,7 @@ PROGS	= recommender
 
 all:	$(PROGS)
 
-recommender: recommender.o csr_utility.o
-	$(CC) -o $@ $(LDFLAGS) recommender.o csr_utility.o
-
-graph: graph_script.cpp
-	$(CC) -o $@ $(LDFLAGS) graph_script.cpp
+recommender: recommender.o csr_utility.o vector_utility.o
+	$(CC) -o $@ $(LDFLAGS) recommender.o csr_utility.o vector_utility.o
 
 clean:;	$(RM) $(PROGS) *.o core

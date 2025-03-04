@@ -14,6 +14,7 @@ template std::istream& operator>>(std::istream& file, std::vector<std::pair<unsi
 template std::ostream& operator<<(std::ostream&, const std::vector<double>&);
 template std::ostream& operator<<(std::ostream&, const std::vector<int>&);
 template double magnitude(const std::vector<double>);
+template bool second_item(const std::pair<unsigned,int>&, const std::pair<unsigned,int>&);
 
 template <typename T>
 std::istream& operator>>(std::istream& file, std::vector<std::pair<unsigned,T>>& vec){
@@ -89,4 +90,9 @@ T magnitude(const std::vector<T> vec){
 		magnit += (val * val);
 	magnit = sqrt(magnit);
 	return magnit;
+}
+
+template <typename A, typename B>
+bool second_item(const std::pair<A,B>& left, const std::pair<A,B>& right){
+	return (left.second > right.second);
 }

@@ -1,55 +1,34 @@
 #include <cstdlib>
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include "csr_utility.h"
-//#include "vector_utility.h"
+#include "vector_utility.h"
 
 int main(int argc, char ** argv){
-	if (argc < 2){
-		std::cerr << "Expected format is ./a.out <input file>\n";
+	if (argc < 3){
+		std::cerr << "Expected format is ./a.out <train file> <test file>\n";
 		return EXIT_FAILURE;
 	}
 	std::ifstream file {argv[1]};
 	//Might want to do an error check here
 
-	CSR<int> * csr_input = new CSR<int>;
-	file >> csr_input;
-	std::cout << csr_input;
-//
-//	CSR<double> * csr = new CSR<double>;
-//	std::cout << transpose(csr_input, csr);
-//	
-//	unsigned N = csr->ptr.size() - 1;
-//	double vo_start = 1 / (double) N;
-//
-//	std::vector<double> V;
-//	std::vector<double> Vo;
-//	for (unsigned i = 0; i < N; ++i){
-//		V.push_back(0.0);
-//		Vo.push_back(vo_start);
-//	}
-//
-//	(*csr) *= d;
-//
-//	std::vector<double> I = teleport(d, N);
-//		
-//	double epsilon = 1e-10;
-//	unsigned iterations = 0;
-//	while (magnitude( V - Vo) > epsilon){
-//		Vo = V;
-//		V = csr * Vo + I;
-//		++iterations;
-//	}
-//
-//	std::cout << "Number of iterations: " << iterations << "\n";
-//
-//	std::cout << "Final result\n" << V;
-//	double sum = 0.0;
-//	for (const auto& val : V) sum += val;
-//	std::cout << "Sum of page ranks: " << sum << "\n";
-//
-//	delete csr;
-	delete csr_input;
+	CSR<int> * user_ratings = new CSR<int>;
+	file >> user_ratings;
+	std::cout << user_ratings;
+
+	std::vector<std::pair<unsigned, int>> unknown;
+	std::ifstream new_file {argv[2]};
+	new_file >> unknown;
+
+	for (const auto& par : unknown) std::cout << "(" << par.first << ", " << par.second << ")\n";
+	//std::sort(unknown.begin(), unknown.end(), second_item<unsigned, int>);
+
+	std::vector<std::pair<unsigned, double>> result = user_ratings->cosine(unknown);
+
+	for (const auto& x : result) std::cout << "(" << x.first << ", " << x.second << ")\n";
+
+	delete user_ratings;
 	return 0;
 }

@@ -20,4 +20,8 @@ std::vector<T> teleport(const T d, const int total);
 
 template <typename T>
 T magnitude(const std::vector<T> vec);
+
+template <typename A, typename B>
+bool second_item(const std::pair<A,B>& left, const std::pair<A,B>& right);
+
 #endif

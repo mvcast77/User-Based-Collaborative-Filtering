@@ -5,17 +5,44 @@
 #include <cmath>
 #include "csr_utility.h"
 
-//template struct CSR<int>;
+template struct CSR<int>;
 template struct CSR<double>;
 template std::vector<double> operator*(const CSR<double>*, const std::vector<double>&);
 template std::vector<int> operator*(const CSR<int>*, const std::vector<int>&);
-//template void CSR::operator*=(const int coefficient);
-//template void CSR::operator*=(const double coefficient);
 template CSR<double>* transpose(CSR<double>*, CSR<double>*);
 template std::istream& operator>>(std::istream&, CSR<int>*);
 template std::istream& operator>>(std::istream&, CSR<double>*);
 template std::ostream& operator<<(std::ostream&, const CSR<double>*);
 template std::ostream& operator<<(std::ostream&, const CSR<int>*);
+
+template <typename T>
+std::vector<std::pair<unsigned, double>> CSR<T>::cosine(const std::vector<std::pair<unsigned, T>>& x) const{
+	int spot = 0, count = 0, spot2 = 0;
+	double sum = 0;
+	double mag_i = 0, mag_j = 0;
+	std::vector<std::pair<unsigned,double>> result;
+
+	for (int i = 0; i < ptr.size() - 1; ++i){
+		sum = count = spot2 = mag_i = mag_j = 0;
+		for (int j = 0; count < ptr[i+1] - ptr[i] && spot2 < x.size(); ++j){
+			if (j == indices[spot]){
+				while (spot2 < x.size() && x[spot2].first - 1 < indices[spot]) ++spot2;
+				if (x[spot2].first - 1 == indices[spot]){
+					//double cast is because I'm paranoid
+					sum += (double) x[spot2].second * values[spot];
+					mag_i += values[spot] * values[spot];
+					mag_j += x[spot2].second * x[spot2].second;
+				}
+				++spot; ++count;
+			}
+		}
+		mag_i = sqrt(mag_i);
+		mag_j = sqrt(mag_j);
+		sum = sum / (mag_i * mag_j);
+		result.push_back({i + 1, sum});
+	}
+	return result;
+}
 
 template <typename T>
 std::vector<double> CSR<T>::cosine(const std::vector<T>& x) const{

@@ -17,23 +17,25 @@ template std::ostream& operator<<(std::ostream&, const CSR<int>*);
 
 template <typename T>
 std::vector<std::pair<unsigned, double>> CSR<T>::cosine(const std::vector<std::pair<unsigned, T>>& x) const{
-	int spot = 0, count = 0, spot2 = 0;
+	int spot = 0;
 	double sum = 0;
 	double mag_i = 0, mag_j = 0;
 	std::vector<std::pair<unsigned,double>> result;
 
 	for (int i = 0; i < ptr.size() - 1; ++i){
-		sum = count = spot2 = mag_i = mag_j = 0;
-		for (int j = 0; count < ptr[i+1] - ptr[i] && spot2 < x.size(); ++j){
-			if (j == indices[spot]){
-				while (spot2 < x.size() && x[spot2].first - 1 < indices[spot]) ++spot2;
-				if (x[spot2].first - 1 == indices[spot]){
-					//double cast is because I'm paranoid
-					sum += (double) x[spot2].second * values[spot];
-					mag_i += values[spot] * values[spot];
-					mag_j += x[spot2].second * x[spot2].second;
-				}
-				++spot; ++count;
+		sum = mag_i = mag_j = 0;
+		spot = ptr[i];
+		for (const auto& par : x){
+			std::cout << "Index is: " << indices[spot] << ", and Val index is: " << par.first << "\n";
+			if (spot == ptr[i + 1]) break;
+			if (par.first < indices[spot]) continue;
+			while (par.first > indices[spot] && spot != ptr[i + 1]) ++ spot;
+			if (par.first == indices[spot]){
+				sum += par.second * values[spot];
+				mag_i += values[spot] * values[spot];
+				mag_j += par.second * par.second;
+				++spot;
+				std::cout << "multiply: " << sum << "\n";
 			}
 		}
 		mag_i = sqrt(mag_i);

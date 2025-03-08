@@ -15,6 +15,7 @@ template std::ostream& operator<<(std::ostream&, const std::vector<double>&);
 template std::ostream& operator<<(std::ostream&, const std::vector<int>&);
 template double magnitude(const std::vector<double>);
 template bool second_item(const std::pair<unsigned,int>&, const std::pair<unsigned,int>&);
+template std::vector<std::pair<unsigned,int>> split(std::vector<std::pair<unsigned,int>>&);
 
 template <typename T>
 std::istream& operator>>(std::istream& file, std::vector<std::pair<unsigned,T>>& vec){
@@ -95,4 +96,20 @@ T magnitude(const std::vector<T> vec){
 template <typename A, typename B>
 bool second_item(const std::pair<A,B>& left, const std::pair<A,B>& right){
 	return (left.second > right.second);
+}
+
+template <typename T>
+std::vector<std::pair<unsigned,T>> split(std::vector<std::pair<unsigned,T>>& x){
+	std::vector<std::pair<unsigned,T>> predictee;
+
+	auto pos = x.begin();
+	while ((*pos).second != 0) ++pos;
+
+	auto dist = x.end() - pos;
+
+	for (auto i = 0, x_pos = pos; i < dist; ++i, ++x_pos) predictee.push_back(*x_pos);
+	
+	x.erase(pos, x.end());
+
+	return predictee;
 }

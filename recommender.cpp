@@ -25,6 +25,8 @@ int main(int argc, char ** argv){
 	for (const auto& par : unknown) std::cout << "(" << par.first << ", " << par.second << ")\n";
 	//std::sort(unknown.begin(), unknown.end(), second_item<unsigned, int>);
 
+	std::vector<std::pair<unsigned, int>> want = split(unknown);
+
 	std::vector<std::pair<unsigned, double>> result = user_ratings->cosine(unknown);
 
 	for (const auto& x : result) std::cout << "(" << x.first << ", " << x.second << ")\n";

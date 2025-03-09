@@ -27,4 +27,7 @@ std::istream& operator>>(std::istream& file, CSR<T>* csr);
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const CSR<T>* csr);
 
+template <typename T>
+void cosine_predictions(std::vector<std::pair<unsigned, T>>& predictee, const std::vector<std::pair<unsigned, T>>& cosine, const CSR<T>* csr, unsigned k);
+
 #endif

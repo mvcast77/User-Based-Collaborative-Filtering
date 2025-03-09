@@ -14,6 +14,7 @@ template std::istream& operator>>(std::istream&, CSR<int>*);
 template std::istream& operator>>(std::istream&, CSR<double>*);
 template std::ostream& operator<<(std::ostream&, const CSR<double>*);
 template std::ostream& operator<<(std::ostream&, const CSR<int>*);
+template void cosine_predictions(std::vector<std::pair<unsigned,double>>&, const std::vector<std::pair<unsigned,double>>&, const CSR<double>*, unsigned);
 
 template <typename T>
 std::vector<std::pair<unsigned, double>> CSR<T>::cosine(const std::vector<std::pair<unsigned, T>>& x) const{
@@ -184,4 +185,32 @@ std::ostream& operator<<(std::ostream& os, const CSR<T>* csr){
 	os << "]\n";
 
 	return os;
+}
+
+template <typename T>
+void cosine_predictions(std::vector<std::pair<unsigned, T>>& predictee, const std::vector<std::pair<unsigned, T>>& cosine, const CSR<T>* csr, unsigned k){
+	T sum;
+	double div;
+	unsigned kcount, buf;
+	for (auto& zero : predictee){
+		sum = 0;
+		div = 0.0;
+		kcount = 0;
+		for (const auto& user : cosine){
+			if (kcount == k) break;
+			auto spot = csr->ptr[user.first - 1];
+			while (spot <= csr->ptr[user.first] + zero.first - 1){
+				buf = csr->indices[spot];
+				if (buf > zero.first - 1) break;
+				if (buf == zero.first - 1){
+					sum += user.second * csr->values[spot];
+					div += user.second; ++kcount;
+					break;
+				}
+				++spot;
+			}
+		}
+		sum = sum / div;
+		zero.second = sum;
+	}
 }

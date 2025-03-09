@@ -27,4 +27,7 @@ bool second_item(const std::pair<A,B>& left, const std::pair<A,B>& right);
 template <typename T>
 std::vector<std::pair<unsigned,T>> split(std::vector<std::pair<unsigned,T>>& x);
 
+template <typename T>
+void clear_nan(std::vector<std::pair<unsigned,T>>& vec);
+
 #endif
